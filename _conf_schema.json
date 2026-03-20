@@ -1,0 +1,84 @@
+{
+  "app_id": {
+    "type": "string",
+    "description": "Feishu/Lark self-built app_id used for tenant_access_token.",
+    "hint": "cli_aabbccddeeff"
+  },
+  "app_secret": {
+    "type": "string",
+    "description": "Feishu/Lark self-built app_secret used for tenant_access_token.",
+    "hint": "app secret"
+  },
+  "brand": {
+    "type": "string",
+    "description": "Select Feishu or Lark open platform domain.",
+    "default": "feishu",
+    "options": [
+      "feishu",
+      "lark",
+      "https://open.feishu.cn",
+      "https://open.larksuite.com"
+    ]
+  },
+  "skills_dir": {
+    "type": "string",
+    "description": "Relative or absolute path to the skills directory used by /feishu_skill lookup.",
+    "default": "skills",
+    "hint": "skills"
+  },
+  "max_search_results": {
+    "type": "int",
+    "description": "Maximum number of search results returned by /feishu_skill.",
+    "default": 6
+  },
+  "max_reply_chars": {
+    "type": "int",
+    "description": "Maximum reply length in characters.",
+    "default": 2200
+  },
+  "request_timeout_seconds": {
+    "type": "float",
+    "description": "Timeout for Feishu OpenAPI requests.",
+    "default": 20.0
+  },
+  "enable_skill_lookup": {
+    "type": "bool",
+    "description": "Enable local skill lookup commands.",
+    "default": true
+  },
+  "enable_doc": {
+    "type": "bool",
+    "description": "Enable document operations, including doc create behavior tools.",
+    "default": true
+  },
+  "enable_bitable": {
+    "type": "bool",
+    "description": "Enable bitable operations, including app/table/record create behavior tools.",
+    "default": true
+  },
+  "enable_bot_ops": {
+    "type": "bool",
+    "description": "Enable bot and IM operations.",
+    "default": true
+  },
+  "allow_mutation": {
+    "type": "bool",
+    "description": "Allow create and update style operations. Must be true for doc and bitable create behavior tools.",
+    "default": true
+  },
+  "allow_dangerous_actions": {
+    "type": "bool",
+    "description": "Allow delete and overwrite style operations.",
+    "default": false
+  },
+  "allow_raw_openapi": {
+    "type": "bool",
+    "description": "Allow /feishu_run raw for arbitrary /open-apis requests.",
+    "default": false
+  },
+  "show_zip_path": {
+    "type": "bool",
+    "description": "Show full zip path in /feishu_skill zip output.",
+    "default": true
+  }
+}
