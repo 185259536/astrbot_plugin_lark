@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from astrbot.api.event import AstrMessageEvent, filter
-from astrbot.api.star import Context, Star, register
+from astrbot.api.star import Context, Star
 
 from .execution import OperationRouter, pretty_json
 from .feishu_client import FeishuAPIError, FeishuOpenAPIClient
@@ -38,12 +38,6 @@ def upsert_tools_by_name(existing_tools: list[Any], new_tools: list[Any]) -> Non
         existing_tools[current_index] = tool
 
 
-@register(
-    "astrbot_plugin_feishu_skills",
-    "OpenAI",
-    "Lookup local Feishu skill docs and call controlled Feishu OpenAPI with bot credentials.",
-    "0.1.4",
-)
 class FeishuSkillsPlugin(Star):
     def __init__(self, context: Context, config: dict[str, Any] | None = None):
         super().__init__(context)
@@ -223,7 +217,7 @@ class FeishuSkillsPlugin(Star):
         expected_names = [tool.name for tool in build_tools(self)]
         lines = [
             "Feishu tool registry report:",
-            f"- plugin_version: 0.1.4",
+            f"- plugin_version: 0.1.5",
             f"- context_type: {type(self.context).__name__}",
             f"- has_add_llm_tools: {callable(getattr(self.context, 'add_llm_tools', None))}",
             f"- provider_manager_type: {type(provider_manager).__name__ if provider_manager is not None else 'None'}",
