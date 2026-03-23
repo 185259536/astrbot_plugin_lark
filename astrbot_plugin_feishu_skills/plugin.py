@@ -18,11 +18,31 @@ from .skill_registry import SkillRegistry
 LOGGER = logging.getLogger(__name__)
 
 
+def upsert_tools_by_name(existing_tools: list[Any], new_tools: list[Any]) -> None:
+    index_by_name: dict[str, int] = {}
+    for index, tool in enumerate(existing_tools):
+        name = getattr(tool, "name", None)
+        if isinstance(name, str) and name:
+            index_by_name[name] = index
+
+    for tool in new_tools:
+        name = getattr(tool, "name", None)
+        if not isinstance(name, str) or not name:
+            existing_tools.append(tool)
+            continue
+        current_index = index_by_name.get(name)
+        if current_index is None:
+            index_by_name[name] = len(existing_tools)
+            existing_tools.append(tool)
+            continue
+        existing_tools[current_index] = tool
+
+
 @register(
     "astrbot_plugin_feishu_skills",
     "OpenAI",
     "Lookup local Feishu skill docs and call controlled Feishu OpenAPI with bot credentials.",
-    "0.1.3",
+    "0.1.4",
 )
 class FeishuSkillsPlugin(Star):
     def __init__(self, context: Context, config: dict[str, Any] | None = None):
@@ -148,7 +168,7 @@ class FeishuSkillsPlugin(Star):
             },
         )
         if callable(add_tools):
-            add_tools(tools)
+            add_tools(*tools)
             LOGGER.info("Registered Feishu LLM tools via context.add_llm_tools: %s", ", ".join(tool_names))
             print("[astrbot_plugin_feishu_skills] registered via context.add_llm_tools", tool_names)
             return
@@ -157,14 +177,7 @@ class FeishuSkillsPlugin(Star):
         llm_tools = getattr(provider_manager, "llm_tools", None)
         func_list = getattr(llm_tools, "func_list", None)
         if isinstance(func_list, list):
-            existing = {
-                getattr(tool, "name", None): tool
-                for tool in func_list
-                if getattr(tool, "name", None) is not None
-            }
-            for tool in tools:
-                existing[tool.name] = tool
-            func_list[:] = list(existing.values())
+            upsert_tools_by_name(func_list, tools)
             LOGGER.info("Registered Feishu LLM tools via provider_manager.llm_tools: %s", ", ".join(tool_names))
             print("[astrbot_plugin_feishu_skills] registered via provider_manager.llm_tools", tool_names)
             return

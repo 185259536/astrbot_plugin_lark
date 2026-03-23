@@ -57,6 +57,7 @@ These tools let the model create a doc, create a bitable app, create a table, an
 ## Notes
 
 - The plugin defaults to tenant access token generated from `app_id` and `app_secret`.
+- Behavior tools require AstrBot `>=4.5.1`. The `add_llm_tools` registration API is only available from that version onward.
 - Not every skill in this repository can be executed with bot credentials alone.
 - Skills such as calendar, task, and user-scoped IM read commonly require user authorization in addition to app authorization.
 - `raw` mode is disabled by default.
