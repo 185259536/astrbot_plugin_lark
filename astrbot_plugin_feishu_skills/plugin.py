@@ -220,7 +220,7 @@ class FeishuSkillsPlugin(Star):
         expected_names = [tool.name for tool in build_tools(self)]
         lines = [
             "Feishu tool registry report:",
-            f"- plugin_version: 0.1.6",
+            f"- plugin_version: 0.1.7",
             f"- context_type: {type(self.context).__name__}",
             f"- has_add_llm_tools: {callable(getattr(self.context, 'add_llm_tools', None))}",
             f"- provider_manager_type: {type(provider_manager).__name__ if provider_manager is not None else 'None'}",
