@@ -52,14 +52,17 @@ class FeishuSkillsPlugin(Star):
 
     @filter.command("feishu_skill")
     async def feishu_skill(self, event: AstrMessageEvent):
+        self._stop_event(event)
         yield event.plain_result(await self._handle_feishu_skill(event.message_str))
 
     @filter.command("feishu_run")
     async def feishu_run(self, event: AstrMessageEvent):
+        self._stop_event(event)
         yield event.plain_result(await self._handle_feishu_run(event.message_str))
 
     @filter.command("feishu_tool_debug")
     async def feishu_tool_debug(self, event: AstrMessageEvent):
+        self._stop_event(event)
         tail = self._command_tail(event.message_str, "feishu_tool_debug")
         if tail == "refresh":
             self._register_llm_tools()
@@ -227,6 +230,12 @@ class FeishuSkillsPlugin(Star):
             f"- registered_tools: {', '.join(registered_names) if registered_names else '(empty)'}",
         ]
         return "\n".join(lines)
+
+    @staticmethod
+    def _stop_event(event: AstrMessageEvent) -> None:
+        stop_event = getattr(event, "stop_event", None)
+        if callable(stop_event):
+            stop_event()
 
     async def _run_llm_tool(self, operation: str, payload: dict[str, Any], label: str) -> str:
         try:
