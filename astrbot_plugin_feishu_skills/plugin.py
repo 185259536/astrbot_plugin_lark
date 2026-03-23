@@ -64,6 +64,14 @@ class FeishuSkillsPlugin(Star):
     async def feishu_run(self, event: AstrMessageEvent):
         yield event.plain_result(await self._handle_feishu_run(event.message_str))
 
+    @filter.command("feishu_tool_debug")
+    async def feishu_tool_debug(self, event: AstrMessageEvent):
+        tail = self._command_tail(event.message_str, "feishu_tool_debug")
+        if tail == "refresh":
+            self._register_llm_tools()
+            self._debug_tool_registry_state("manual_refresh")
+        yield event.plain_result(self._tool_registry_report())
+
     async def _handle_feishu_skill(self, message: str) -> str:
         if not self.config.enable_skill_lookup:
             return "Skill lookup is disabled by config."
@@ -204,6 +212,27 @@ class FeishuSkillsPlugin(Star):
         }
         LOGGER.info("Feishu tool registry debug %s: %s", stage, debug_info)
         print(f"[astrbot_plugin_feishu_skills] debug {stage}: {debug_info}")
+
+    def _tool_registry_report(self) -> str:
+        provider_manager = getattr(self.context, "provider_manager", None)
+        llm_tools = getattr(provider_manager, "llm_tools", None)
+        func_list = getattr(llm_tools, "func_list", None)
+        registered_names: list[str] = []
+        if isinstance(func_list, list):
+            registered_names = [getattr(tool, "name", "<unnamed>") for tool in func_list]
+        expected_names = [tool.name for tool in build_tools(self)]
+        lines = [
+            "Feishu tool registry report:",
+            f"- plugin_version: 0.1.4",
+            f"- context_type: {type(self.context).__name__}",
+            f"- has_add_llm_tools: {callable(getattr(self.context, 'add_llm_tools', None))}",
+            f"- provider_manager_type: {type(provider_manager).__name__ if provider_manager is not None else 'None'}",
+            f"- has_llm_tools: {llm_tools is not None}",
+            f"- func_list_type: {type(func_list).__name__ if func_list is not None else 'None'}",
+            f"- expected_tools: {', '.join(expected_names)}",
+            f"- registered_tools: {', '.join(registered_names) if registered_names else '(empty)'}",
+        ]
+        return "\n".join(lines)
 
     async def _run_llm_tool(self, operation: str, payload: dict[str, Any], label: str) -> str:
         try:

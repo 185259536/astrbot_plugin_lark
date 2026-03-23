@@ -1,1 +1,1 @@
-# No extra dependency required for the current implementation.
+pydantic>=2,<3

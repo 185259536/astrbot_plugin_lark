@@ -1,7 +1,15 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, field
 from typing import Any
+
+try:
+    from pydantic import Field
+    from pydantic.dataclasses import dataclass
+except ImportError:
+    from dataclasses import dataclass, field
+
+    def Field(*, default_factory):
+        return field(default_factory=default_factory)
 
 from astrbot.core.agent.run_context import ContextWrapper
 from astrbot.core.agent.tool import FunctionTool, ToolExecResult
@@ -14,7 +22,7 @@ class _BaseFeishuTool(FunctionTool[AstrAgentContext]):
 
     name: str = ""
     description: str = ""
-    parameters: dict[str, Any] = field(default_factory=dict)
+    parameters: dict[str, Any] = Field(default_factory=dict)
 
     async def _run(self, operation: str, payload: dict[str, Any], label: str) -> str:
         return await self.plugin._run_llm_tool(operation, payload, label)
@@ -24,7 +32,7 @@ class _BaseFeishuTool(FunctionTool[AstrAgentContext]):
 class FeishuCreateDocTool(_BaseFeishuTool):
     name: str = "feishu_create_doc"
     description: str = "Create a Feishu docx document with the plugin tenant credentials."
-    parameters: dict[str, Any] = field(
+    parameters: dict[str, Any] = Field(
         default_factory=lambda: {
             "type": "object",
             "properties": {
@@ -53,7 +61,7 @@ class FeishuCreateDocTool(_BaseFeishuTool):
 class FeishuCreateBitableAppTool(_BaseFeishuTool):
     name: str = "feishu_create_bitable_app"
     description: str = "Create a Feishu bitable app with the plugin tenant credentials."
-    parameters: dict[str, Any] = field(
+    parameters: dict[str, Any] = Field(
         default_factory=lambda: {
             "type": "object",
             "properties": {
@@ -82,7 +90,7 @@ class FeishuCreateBitableAppTool(_BaseFeishuTool):
 class FeishuCreateBitableTableTool(_BaseFeishuTool):
     name: str = "feishu_create_bitable_table"
     description: str = "Create a table inside an existing Feishu bitable app."
-    parameters: dict[str, Any] = field(
+    parameters: dict[str, Any] = Field(
         default_factory=lambda: {
             "type": "object",
             "properties": {
@@ -123,7 +131,7 @@ class FeishuCreateBitableTableTool(_BaseFeishuTool):
 class FeishuCreateBitableRecordTool(_BaseFeishuTool):
     name: str = "feishu_create_bitable_record"
     description: str = "Create a record inside an existing Feishu bitable table."
-    parameters: dict[str, Any] = field(
+    parameters: dict[str, Any] = Field(
         default_factory=lambda: {
             "type": "object",
             "properties": {

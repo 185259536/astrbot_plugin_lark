@@ -18,6 +18,8 @@ It provides three groups of capabilities:
 - `/feishu_skill call <skill> <action> <json>`
 - `/feishu_run help`
 - `/feishu_run <operation> <json>`
+- `/feishu_tool_debug`
+- `/feishu_tool_debug refresh`
 
 ## Behavior Tools
 
@@ -75,6 +77,8 @@ If the plugin loads successfully but you still cannot see or use the behavior to
   - `feishu_create_bitable_app`
   - `feishu_create_bitable_table`
   - `feishu_create_bitable_record`
+- Run `/feishu_tool_debug` and confirm `registered_tools` contains the same 4 names.
+- If `registered_tools` is empty, run `/feishu_tool_debug refresh` once and then retry `/tool ls`.
 - If the tools exist but are disabled, enable them:
 
 ```text
