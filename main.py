@@ -15,7 +15,7 @@ from astrbot_plugin_feishu_skills.plugin import FeishuSkillsPlugin as _FeishuSki
     "astrbot_plugin_feishu_skills",
     "OpenAI",
     "Lookup local Feishu skill docs and call controlled Feishu OpenAPI with bot credentials.",
-    "0.1.5",
+    "0.1.6",
 )
 class Main(_FeishuSkillsPlugin):
     pass
