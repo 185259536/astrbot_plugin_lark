@@ -1,6 +1,6 @@
 # AstrBot Feishu Skills Plugin / AstrBot 飞书技能插件
 
-> Version / 当前版本：`0.1.8`
+> Version / 当前版本：`0.1.9`
 
 一个面向 AstrBot 的飞书插件，用于查询本地技能文档，并通过插件配置的飞书应用凭证执行受控 OpenAPI 调用。  
 An AstrBot plugin for Feishu/Lark that can look up local skill documents and execute controlled OpenAPI calls with the plugin's configured app credentials.

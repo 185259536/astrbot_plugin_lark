@@ -1,5 +1,5 @@
 name: astrbot_plugin_feishu_skills
-version: 0.1.8
+version: 0.1.9
 author: OpenAI
 repo: https://github.com/185259536/astrbot_plugin_lark
 help: 基于当前仓库 skills 的飞书技能查询与机器人凭证 OpenAPI 调用插件。

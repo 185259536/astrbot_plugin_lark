@@ -1,6 +1,7 @@
 import importlib
 import sys
 import types
+import asyncio
 import unittest
 
 
@@ -82,6 +83,40 @@ class MainRegistrationTest(unittest.TestCase):
         self.assertEqual(module.Main.feishu_skill._astrbot_command, "feishu_skill")
         self.assertEqual(module.Main.feishu_run._astrbot_command, "feishu_run")
         self.assertEqual(module.Main.feishu_tool_debug._astrbot_command, "feishu_tool_debug")
+
+    def test_main_tool_debug_returns_report_without_super(self) -> None:
+        install_astrbot_stubs()
+        plugin_module = importlib.import_module("main")
+        plugin_module = importlib.reload(plugin_module)
+
+        class Context:
+            def add_llm_tools(self, *tools):
+                self.tools = list(tools)
+
+        class Event:
+            def __init__(self):
+                self.message_str = "/feishu_tool_debug"
+                self.stopped = False
+
+            def plain_result(self, text):
+                return text
+
+            def stop_event(self):
+                self.stopped = True
+
+        plugin = plugin_module.Main(Context(), {"skills_dir": "__missing_skills__"})
+        event = Event()
+
+        async def run():
+            results = []
+            async for item in plugin.feishu_tool_debug(event):
+                results.append(item)
+            return results
+
+        results = asyncio.run(run())
+        self.assertTrue(event.stopped)
+        self.assertEqual(len(results), 1)
+        self.assertIn("Feishu tool registry report:", results[0])
 
 
 if __name__ == "__main__":
